@@ -1,0 +1,50 @@
+html {
+	height: calc( 100% - 18px );
+}
+
+body, #content {
+	height: 100%;
+}
+
+#accordion-parent {
+	height: 100%;
+	display: inline-block;
+	width: 30%;
+}
+
+#tabs {
+	width: 69%;
+	height: 100%;
+	vertical-align: top;
+	display: inline-block;
+}
+
+#tabs li .ui-icon-close {
+	float: left;
+	margin: 0.4em 0.2em 0 0;
+	cursor: pointer;
+}
+
+.intLink { cursor: pointer; }
+img.intLink { border: 0; }
+.toolBar {
+	width: 100%;
+	border: 1px #000000 solid;
+}
+.toolBar ul {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	display: inline-block;
+}
+.toolBar ul li {
+	list-style-type: none;
+	display: inline-block;
+}
+
+.textBox {
+  width: calc( 100% - 24px );
+  height: 90%;
+  border: 1px #000000 solid;
+  padding: 12px;
+	background-color: #EEE;
+}
