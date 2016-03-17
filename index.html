@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>WAT?! - WebAccessTools</title>
+		<meta charset="utf-8" />
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/overcast/jquery-ui.css"/>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
 		<link rel="stylesheet" href="index.css"/>
@@ -34,36 +35,34 @@
 				</div>
 			</div>
 			<div id="tabs">
-			  <ul>
-			    <li><a href="#tabs-editor">Nunc tincidunt</a><span class="ui-icon ui-icon-close" role="presentation">Remove Tab</span></li>
-			    <li><a href="#tabs-editor">Proin dolor</a><span class="ui-icon ui-icon-close" role="presentation">Remove Tab</span></li>
-			    <li><a href="#tabs-editor">Aenean lacinia</a><span class="ui-icon ui-icon-close" role="presentation">Remove Tab</span></li>
-			  </ul>
-			  <div id="tabs-editor">
-					<div class="toolBar">
-						<ul>
-							<li class="intLink" title="Bold" onclick="formatDoc('bold');"><i class="fa fa-bold"></i></li>
-							<li class="intLink" title="Italic" onclick="formatDoc('italic');"><i class="fa fa-italic"></i></li>
-							<li class="intLink" title="Underline" onclick="formatDoc('underline');"><i class="fa fa-underline"></i></li>
-						</ul>
-						<ul>
-							<li class="intLink" title="Undo" onclick="formatDoc('undo');"><i class="fa fa-undo"></i></li>
-							<li class="intLink" title="Redo" onclick="formatDoc('redo');"><i class="fa fa-repeat"></i></li>
-						</ul>
-						<ul>
-							<li class="intLink" title="Cut" onclick="formatDoc('cut');"><i class="fa fa-cut"></i></li>
-							<li class="intLink" title="Copy" onclick="formatDoc('copy');"><i class="fa fa-copy"></i></li>
-							<li class="intLink" title="Paste" onclick="formatDoc('paste');"><i class="fa fa-paste"></i></li>
-						</ul>
-						<ul>
-							<li class="intLink" title="Justify Left" onclick="formatDoc('justifyLeft');"><i class="fa fa-align-left"></i></li>
-							<li class="intLink" title="Justify Center" onclick="formatDoc('justifyCenter');"><i class="fa fa-align-center"></i></li>
-							<li class="intLink" title="justify Right" onclick="formatDoc('justifyRight');"><i class="fa fa-align-right"></i></li>
-							<li class="intLink" title="Justify Full" onclick="formatDoc('justifyFull');"><i class="fa fa-align-justify"></i></li>
-						</ul>
-					</div>
-					<div class="textBox" contenteditable="true"><p>Lorem ipsum</p></div>
-			  </div>
+			  <ul></ul>
+			</div>
+		</section>
+		<section class="hide">
+			<div id="editorModel" class="editor">
+				<div class="toolBar">
+					<ul>
+						<li class="intLink" title="Bold" onclick="formatDoc(this,'bold');"><i class="fa fa-bold"></i></li>
+						<li class="intLink" title="Italic" onclick="formatDoc(this,'italic');"><i class="fa fa-italic"></i></li>
+						<li class="intLink" title="Underline" onclick="formatDoc(this,'underline');"><i class="fa fa-underline"></i></li>
+					</ul>
+					<ul>
+						<li class="intLink" title="Undo" onclick="formatDoc(this,'undo');"><i class="fa fa-undo"></i></li>
+						<li class="intLink" title="Redo" onclick="formatDoc(this,'redo');"><i class="fa fa-repeat"></i></li>
+					</ul>
+					<ul>
+						<li class="intLink" title="Cut" onclick="formatDoc(this,'cut');"><i class="fa fa-cut"></i></li>
+						<li class="intLink" title="Copy" onclick="formatDoc(this,'copy');"><i class="fa fa-copy"></i></li>
+						<li class="intLink" title="Paste" onclick="formatDoc(this,'paste');"><i class="fa fa-paste"></i></li>
+					</ul>
+					<ul>
+						<li class="intLink" title="Justify Left" onclick="formatDoc(this,'justifyLeft');"><i class="fa fa-align-left"></i></li>
+						<li class="intLink" title="Justify Center" onclick="formatDoc(this,'justifyCenter');"><i class="fa fa-align-center"></i></li>
+						<li class="intLink" title="justify Right" onclick="formatDoc(this,'justifyRight');"><i class="fa fa-align-right"></i></li>
+						<li class="intLink" title="Justify Full" onclick="formatDoc(this,'justifyFull');"><i class="fa fa-align-justify"></i></li>
+					</ul>
+				</div>
+				<div class="textBox" contenteditable="true"></div>
 			</div>
 		</section>
 		<script src="http://code.jquery.com/jquery.min.js"></script>

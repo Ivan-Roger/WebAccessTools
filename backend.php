@@ -10,6 +10,7 @@ if (isset($_GET['op'])) {
 	if ($_GET['op']=="recup") {
 		if (isset($_GET['file']) && $_GET['file']!="") {
 			if (is_file("files/".$_GET['file'])) {
+				sleep(2);
 				$res['data'] = file_get_contents(str_replace("..","","files/".$_GET['file']));
 				$res['status']="200"; // Status code
 				$res['message']="Success !"; // Displayable message
@@ -30,6 +31,6 @@ if (isset($_GET['op'])) {
 	$res['status']="401"; // Status code
 	$res['message']="No operation to perform."; // Displayable message
 }
-http_response_code($res['status']);
+//http_response_code($res['status']);
 echo(json_encode($res, JSON_PRETTY_PRINT));
 ?>
