@@ -16,10 +16,72 @@ function init() {
 	$( "#accordion" ).accordion({
 		heightStyle: "fill"
 	});
+	initTree();
 	loadTabs();
 }
 
-// Applique la commande sCmd sur la sélection de l'element oDoc via execCommand
+function createmenu(node) {
+	var tree = $("#tree").jstree(true);
+	return {
+		"item1": {
+			"label": "Create Directory",
+			"action":function () {
+				node = tree.create_node(node);
+				tree.edit(node);
+			}
+		},
+		"item2": {
+			"label": "Create File",
+			"action": function () {
+				node = tree.create_node(node,{"type":"file"});
+				tree.edit(node);
+			}
+		},
+		"item3": {
+			"label": "Rename",
+			"action": function (obj) {
+				tree.edit(node);
+			}
+		},
+		"item4": {
+			"label": "Remove",
+			"action": function (obj) {
+				tree.delete_node(node);
+			}
+		}
+	};
+}
+
+function initTree() {
+	$('#tree').jstree({
+    'core' : {
+    		"animation" : 0,
+    		"check_callback" : true,
+    		"themes" : { "stripes" : true },
+            'data' : {"cache":false,"url" : "backend.php?op=files", "dataType" : "json" }// needed only if you do not supply JSON headers
+              },
+    "types" : {
+    			"#" : { "max_children" : 1, "max_depth" : 4, "valid_children" : ["root"] },
+   				"root" : { 'icon':"./icons/folder.png", "valid_children" : ["default"] },
+    			"default" : { 'icon':"./icons/folder.png","valid_children" : ["default","file"] },
+    			"file" : { 'icon' :"./icons/file.png", "valid_children" : [] }
+    			},
+    "plugins" : [ "contextmenu", "dnd", "state", "types", "wholerow"],
+    "contextmenu":{ "items": createmenu}
+  });
+
+	// On affiche le nom du fichier sélectionné dans une boite de dialogue
+	$('#tree').on("select_node.jstree",function(e,data)
+	{
+		// si le noeud représente un fichier
+		if (data.node.type=='file')
+		{
+			alert("fichier "+data.node.text+" sélectionné");
+		}
+	});
+}
+
+// Applique la commande sCmd sur la sélection de l'element e via execCommand
 function formatDoc(e,sCmd) {
 	$(e).parent().find(".textBox").focus();
 	document.execCommand(sCmd, false, null);
@@ -52,6 +114,7 @@ function loadTabContent(idTab) {
 	console.log("Loading file \""+file+"\"...");
 	$("#tabs>ul>li[data-tab-id="+idTab+"]>a").prepend($("<i class='fa fa-inline fa-spin fa-circle-o-notch'/>"));
 	$("#tabs>ul>li[data-tab-id="+idTab+"]").addClass("tab-loading");
+	// TODO -- Ne pas ajouter le spinner a chaque fois mais juste l'afficher pendant le loading (CSS) -- TODO //
 	$.ajax({
 		method: 'GET',
 		url: 'backend.php?op=recup&file='+file,

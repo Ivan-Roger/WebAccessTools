@@ -13,7 +13,7 @@
 				<div id="accordion">
 				  <h3>Mes Fichiers</h3>
 				  <div>
-				    <p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p>
+				    <div id="tree"></div>
 				  </div>
 				  <h3>Calculatrice</h3>
 				  <div>
@@ -47,6 +47,14 @@
 						<li class="intLink" title="Underline" onclick="formatDoc(this,'underline');"><i class="fa fa-underline"></i></li>
 					</ul>
 					<ul>
+						<li class="intLink" title="Increase Font Size" onclick="formatDoc(this,'increaseFontSize');"><i class="fa fa-plus"></i></li>
+						<li class="intLink" title="Decrease Font Size" onclick="formatDoc(this,'decreaseFontSize');"><i class="fa fa-minus"></i></li>
+					</ul>
+					<ul>
+						<li class="intLink" title="Unordered List" onclick="formatDoc(this,'insertUnorderedList');"><i class="fa fa-list-ul"></i></li>
+						<li class="intLink" title="Ordered List" onclick="formatDoc(this,'insertOrderedList');"><i class="fa fa-list-ol"></i></li>
+					</ul>
+					<ul>
 						<li class="intLink" title="Undo" onclick="formatDoc(this,'undo');"><i class="fa fa-undo"></i></li>
 						<li class="intLink" title="Redo" onclick="formatDoc(this,'redo');"><i class="fa fa-repeat"></i></li>
 					</ul>
@@ -68,6 +76,7 @@
 		<script src="http://code.jquery.com/jquery.min.js"></script>
 		<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 		<script src="jquery.cookie.js"></script>
+		<script src="jstree.js"></script>
 		<script src="index.js"></script>
 	</body>
 </html>

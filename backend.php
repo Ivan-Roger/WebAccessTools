@@ -5,6 +5,29 @@ header("X-Application:"."WebAccessTools");
 header("X-Version:".APP_VERSION);
 header("Content-type:"."application/json");
 
+function newFolder($id,$nom) {
+	$res['id'] = $id;
+	$res['text'] = $nom;
+	$res['state']['loaded'] = true;
+	$res['state']['opened'] = true;
+	$res['state']['selected'] = false;
+	$res['state']['disabled'] = false;
+	$res['children'] = Array();
+	$res['type'] = "file";
+	return $res;
+}
+function newFile($id,$nom) {
+	$res['id'] = $id;
+	$res['text'] = $nom;
+	$res['state']['loaded'] = true;
+	$res['state']['opened'] = false;
+	$res['state']['selected'] = false;
+	$res['state']['disabled'] = false;
+	$res['children'] = Array();
+	$res['type'] = "default";
+	return $res;
+}
+
 if (isset($_GET['op'])) {
 	$res['operation']=$_GET['op']; // Action performed
 	if ($_GET['op']=="recup") {
@@ -22,6 +45,10 @@ if (isset($_GET['op'])) {
 			$res['status']="402"; // Status code
 			$res['message']="Missing file parameter."; // Displayable message
 		}
+	} elseif ($_GET['op']=="files") {
+		$root = newFolder('root','Root');
+		$root['children'][] = newFile('file1','test.txt');
+		$res[] = $root;
 	} else {
 		$res['status']="401"; // Status code
 		$res['message']="Unknown operation."; // Displayable message
