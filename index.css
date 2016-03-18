@@ -19,32 +19,49 @@ body, #content {
 	display: inline-block;
 }
 
-#tabs li .ui-icon-close {
+#tabs>ul>li:not(.tab-loading)>a {
+	margin-left: 20px;
+}
+
+#tabs>ul>li:not(.tab-loading) {
+	margin-left: 0px;
+}
+
+#tabs>ul>li.tab-loading>a>i.fa {
+	margin-right: 3px;
+}
+
+#tabs>ul>li .ui-icon-close {
 	float: left;
 	margin: 0.4em 0.2em 0 0;
 	cursor: pointer;
 }
 
-.intLink { cursor: pointer; }
-img.intLink { border: 0; }
-.toolBar {
+.editor .intLink {
+	cursor: pointer;
+}
+.editor .toolBar {
 	width: 100%;
 	border: 1px #000000 solid;
 }
-.toolBar ul {
+.editor .toolBar ul {
 	margin-top: 5px;
 	margin-bottom: 5px;
 	display: inline-block;
 }
-.toolBar ul li {
+.editor .toolBar ul li {
 	list-style-type: none;
 	display: inline-block;
 }
-
-.textBox {
+.editor .textBox {
   width: calc( 100% - 24px );
   height: 90%;
   border: 1px #000000 solid;
   padding: 12px;
 	background-color: #EEE;
+	overflow: auto;
+}
+
+section.hide {
+	display: none;
 }
