@@ -23,11 +23,12 @@ body, #content {
 	margin-left: 20px;
 }
 
-#tabs>ul>li:not(.tab-loading) {
-	margin-left: 0px;
+#tabs>ul>li:not(.tab-loading)>a>i.fa {
+	display: none;
 }
 
 #tabs>ul>li.tab-loading>a>i.fa {
+	display: inline-block;
 	margin-right: 3px;
 }
 

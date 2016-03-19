@@ -17,7 +17,6 @@ function init() {
 		heightStyle: "fill"
 	});
 	initTree();
-	loadTabs();
 }
 
 function createmenu(node) {
@@ -63,8 +62,8 @@ function initTree() {
     "types" : {
     			"#" : { "max_children" : 1, "max_depth" : 4, "valid_children" : ["root"] },
    				"root" : { 'icon':"fa fa-folder", "valid_children" : ["default"] },
-    			"default" : { 'icon':"fa fa-folder","valid_children" : ["default","file"] },
-    			"file" : { 'icon' :"fa fa-file", "valid_children" : [] }
+    			"default" : { 'icon':"fa fa-folder-o","valid_children" : ["default","file"] },
+    			"file" : { 'icon' :"fa fa-file-o", "valid_children" : [] }
     			},
     "plugins" : [ "contextmenu", "dnd", "state", "types", "wholerow"],
     "contextmenu":{ "items": createmenu}
@@ -74,11 +73,39 @@ function initTree() {
 	$('#tree').on("select_node.jstree",function(e,data)
 	{
 		// si le noeud représente un fichier
-		if (data.node.type=='file')
-		{
-			alert("fichier "+data.node.text+" sélectionné");
+		if (data.node.type=='file') {
+			var path = createPath(data.node.parents);
+			var tab = {name: data.node.text, type:data.node.data.type, path: path, id: data.node.id};
+			if (tabExists(tab))
+				focusTab(tab)
+			else
+				addTab(tab);
+				focusTab(tab);
 		}
 	});
+}
+
+function createPath(par) {
+	var arr = par.join('/').split('/');
+	for (var i in arr) {
+		var name = $('#tree').jstree().get_node(arr[i]).text;
+		if (name==undefined)
+			arr.splice(i,1);
+		else
+			arr[i] = name;
+	}
+	if (arr[0]!="#")
+		arr.reverse();
+	return arr.join('/').replace('Racine','');
+}
+
+function tabExists(tab) {
+	return $('#tabs>div.tab[data-file-id="'+tab.id+'"]').size()>0;
+}
+
+function focusTab(tab) {
+	var id = $('#tabs>div.tab[data-path="'+tab.path+'"][data-name="'+tab.name+'"]').data('tab-id');
+	$('#tabs>ul>li[data-tab-id="'+id+'"]:not(.ui-tabs-active)>a').click();
 }
 
 // Applique la commande sCmd sur la sélection de l'element e via execCommand
@@ -90,39 +117,25 @@ function formatDoc(e,sCmd) {
 function addTab(tab) {
 	if (!TAB_TYPES.indexOf(tab.type)==-1) return;
 	var num_tab = $("#tabs>ul>li").size();
-	$("#tabs>ul").append($("<li data-tab-id='"+num_tab+"'><a class='name' href='#tab"+num_tab+"'>"+tab.name+"</a><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>"));
-	$("#tabs").append($("<div class='tab' id='tab"+num_tab+"'/>").append($("#"+tab.type+"Model").clone()));
-}
-
-function loadTabs() {
-	var tabs = [
-		{name:"test.txt", type:"editor"},
-		{name:"lipsum.txt", type:"editor"}
-	];
-	// TODO -- Remplacer la variable tabs en dur par un appel ajax -- TODO //
-	$("#tabs>ul>li").remove();
-	$("#tabs>ul>div.tab").remove();
-	for (var i in tabs) {
-		addTab(tabs[i]);
-		loadTabContent(i);
-	}
+	$("#tabs>ul").append($("<li data-tab-id='"+num_tab+"'><a class='name' href='#tab"+num_tab+"'><i class='fa fa-inline fa-spin fa-circle-o-notch'/>"+tab.name+"</a><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>"));
+	$("#tabs").append($("<div class='tab' data-file-id='"+tab.id+"' data-path='"+tab.path+"' data-name='"+tab.name+"' data-tab-id='"+num_tab+"' id='tab"+num_tab+"'/>").append($("#"+tab.type+"Model").clone().attr('id','')));
 	$("#tabs").tabs("refresh");
+	loadTabContent(num_tab);
 }
 
 function loadTabContent(idTab) {
-	var file = $("#tabs>ul>li[data-tab-id="+idTab+"]>a").text();
+	var tab = $("#tabs>div.tab[data-tab-id="+idTab+"]");
+	var path = tab.data('path');
+	var name = tab.data('name');
+	var file = path+'/'+name;
 	console.log("Loading file \""+file+"\"...");
-	$("#tabs>ul>li[data-tab-id="+idTab+"]>a").prepend($("<i class='fa fa-inline fa-spin fa-circle-o-notch'/>"));
 	$("#tabs>ul>li[data-tab-id="+idTab+"]").addClass("tab-loading");
-	// TODO -- Ne pas ajouter le spinner a chaque fois mais juste l'afficher pendant le loading (CSS) -- TODO //
 	$.ajax({
 		method: 'GET',
 		url: 'backend.php?op=recup&file='+file,
 		success: function(res){
 			$("#tabs>ul>li[data-tab-id="+idTab+"]").removeClass("tab-loading");
-			$("#tabs>ul>li[data-tab-id="+idTab+"]>a>i.fa").remove();
 			if (res.status==200) {
-				console.log("File loaded.");
 				$("#tab"+idTab+" .textBox").html(res.data);
 			} else {
 				console.log("Error "+res.operation+", "+res.status+": "+res.message,res);
