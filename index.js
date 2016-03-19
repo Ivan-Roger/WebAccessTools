@@ -62,9 +62,9 @@ function initTree() {
               },
     "types" : {
     			"#" : { "max_children" : 1, "max_depth" : 4, "valid_children" : ["root"] },
-   				"root" : { 'icon':"./icons/folder.png", "valid_children" : ["default"] },
-    			"default" : { 'icon':"./icons/folder.png","valid_children" : ["default","file"] },
-    			"file" : { 'icon' :"./icons/file.png", "valid_children" : [] }
+   				"root" : { 'icon':"fa fa-folder", "valid_children" : ["default"] },
+    			"default" : { 'icon':"fa fa-folder","valid_children" : ["default","file"] },
+    			"file" : { 'icon' :"fa fa-file", "valid_children" : [] }
     			},
     "plugins" : [ "contextmenu", "dnd", "state", "types", "wholerow"],
     "contextmenu":{ "items": createmenu}

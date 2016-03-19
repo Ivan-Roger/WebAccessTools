@@ -5,32 +5,43 @@ header("X-Application:"."WebAccessTools");
 header("X-Version:".APP_VERSION);
 header("Content-type:"."application/json");
 
+function newRoot() {
+	$res = newFolder('root','Racine');
+	$res['type'] = "root";
+	return $res;
+}
 function newFolder($id,$nom) {
 	$res['id'] = $id;
 	$res['text'] = $nom;
-	$res['state']['loaded'] = true;
 	$res['state']['opened'] = true;
 	$res['state']['selected'] = false;
 	$res['state']['disabled'] = false;
+	$res['li_attr'] = new ArrayObject();
+	$res['a_attr'] = new ArrayObject();
 	$res['children'] = Array();
-	$res['type'] = "file";
+	$res['type'] = "default";
 	return $res;
 }
 function newFile($id,$nom) {
 	$res['id'] = $id;
 	$res['text'] = $nom;
-	$res['state']['loaded'] = true;
 	$res['state']['opened'] = false;
 	$res['state']['selected'] = false;
 	$res['state']['disabled'] = false;
+	$res['li_attr'] = new ArrayObject();
+	$res['a_attr'] = new ArrayObject();
 	$res['children'] = Array();
-	$res['type'] = "default";
+	$res['type'] = "file";
 	return $res;
+}
+function addChild($parent,$child) {
+	$parent['children'][] = $child;
+	return $parent;
 }
 
 if (isset($_GET['op'])) {
-	$res['operation']=$_GET['op']; // Action performed
 	if ($_GET['op']=="recup") {
+		$res['operation']=$_GET['op']; // Action performed
 		if (isset($_GET['file']) && $_GET['file']!="") {
 			if (is_file("files/".$_GET['file'])) {
 				sleep(2);
@@ -46,8 +57,7 @@ if (isset($_GET['op'])) {
 			$res['message']="Missing file parameter."; // Displayable message
 		}
 	} elseif ($_GET['op']=="files") {
-		$root = newFolder('root','Root');
-		$root['children'][] = newFile('file1','test.txt');
+		$root = addChild(newRoot(),addChild(newFolder('docs','Mes Documents'),newFile('file1','test.txt')));
 		$res[] = $root;
 	} else {
 		$res['status']="401"; // Status code
@@ -55,7 +65,7 @@ if (isset($_GET['op'])) {
 	}
 } else {
 	$res['operation']="none"; // Action performed
-	$res['status']="401"; // Status code
+	$res['status']="400"; // Status code
 	$res['message']="No operation to perform."; // Displayable message
 }
 //http_response_code($res['status']);
