@@ -23,7 +23,7 @@ function init() {
 
 function createmenu(node) {
 	var tree = $("#tree").jstree(true);
-	return {
+	var menu = {
 		"item1": {
 			"label": "Create Directory",
 			"action":function () {
@@ -45,12 +45,20 @@ function createmenu(node) {
 			}
 		},
 		"item4": {
-			"label": "Remove",
+			"label": "Delete",
 			"action": function (obj) {
 				tree.delete_node(node);
 			}
 		}
 	};
+	var type = tree.get_node(node.id).type;
+	if (type=='file') {
+		delete menu.item1;
+		delete menu.item2;
+	} else if (type=='root') {
+		delete menu.item2;
+	}
+	return menu;
 }
 
 function initTree() {
@@ -68,10 +76,9 @@ function initTree() {
     			"file" : { 'icon' :"fa fa-file-o", "valid_children" : [] }
     			},
     "plugins" : [ "contextmenu", "dnd", "state", "types", "wholerow"],
-    "contextmenu":{ "items": createmenu}
+    "contextmenu": {"items": createmenu, "select_node": false}
   });
-
-	$('#tree').on("select_node.jstree",function(e,data)	{
+	$('#tree').on("activate_node.jstree",function(e,data)	{
 		// si le noeud représente un fichier
 		if (data.node.type=='file') {
 			var path = createPath(data.node.parents);
