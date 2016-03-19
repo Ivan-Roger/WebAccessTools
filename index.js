@@ -12,6 +12,8 @@ function init() {
 		var panelId = $( this ).closest( "li" ).remove().attr( "aria-controls" );
 		$( "#" + panelId ).remove();
 		tabs.tabs( "refresh" );
+		if ($("#tabs>ul>li").size()==0)
+			$('#tabs>ul').append($("<i class='tab-empty'>Séléctionnez un fichier pour l'ouvrir</i>"));
 	});
 	$( "#accordion" ).accordion({
 		heightStyle: "fill"
@@ -32,7 +34,7 @@ function createmenu(node) {
 		"item2": {
 			"label": "Create File",
 			"action": function () {
-				node = tree.create_node(node,{"type":"file"});
+				node = tree.create_node(node,{"type":"file", data: {type: 'editor'}});
 				tree.edit(node);
 			}
 		},
@@ -69,9 +71,7 @@ function initTree() {
     "contextmenu":{ "items": createmenu}
   });
 
-	// On affiche le nom du fichier sélectionné dans une boite de dialogue
-	$('#tree').on("select_node.jstree",function(e,data)
-	{
+	$('#tree').on("select_node.jstree",function(e,data)	{
 		// si le noeud représente un fichier
 		if (data.node.type=='file') {
 			var path = createPath(data.node.parents);
@@ -79,6 +79,8 @@ function initTree() {
 			if (tabExists(tab))
 				focusTab(tab)
 			else
+				if ($("#tabs>ul>li").size()==0)
+					$('#tabs>ul>i').remove();
 				addTab(tab);
 				focusTab(tab);
 		}
