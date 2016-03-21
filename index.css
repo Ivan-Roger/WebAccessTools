@@ -45,6 +45,9 @@ body, #content {
 	width: 100%;
 	border: 1px #000000 solid;
 }
+.editor .toolBar .tab-saveFile {
+	margin-left: 5px;
+}
 .editor .toolBar ul {
 	margin-top: 5px;
 	margin-bottom: 5px;

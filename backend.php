@@ -13,7 +13,7 @@ if (isset($_GET['op'])) {
 		if (isset($_GET['file']) && $_GET['file']!="") {
 			if (is_file("files".$_GET['file'])) {
 				sleep(2);
-				$res['data'] = file_get_contents(str_replace("..","","files/".$_GET['file']));
+				$res['data'] = file_get_contents(str_replace("..","","files".$_GET['file']));
 				$res['status']="200"; // Status code
 				$res['message']="Success !"; // Displayable message
 			} else {
@@ -24,8 +24,23 @@ if (isset($_GET['op'])) {
 			$res['status']="402"; // Status code
 			$res['message']="Missing file parameter."; // Displayable message
 		}
-	} elseif ($_GET['op']=="files") {
+	} elseif ($_GET['op']=="list") {
 		$res[] = exportDir('files');
+	} elseif ($_GET['op']=="save") {
+		$res['operation']=$_GET['op']; // Action performed
+		if (isset($_GET['file']) && $_GET['file']!="") {
+			if (isset($_POST['data'])) {
+				file_put_contents(str_replace("..","","files".$_GET['file']),$_POST['data']);
+				$res['status']="200"; // Status code
+				$res['message']="Success !"; // Displayable message
+			} else {
+				$res['status']="403"; // Status code
+				$res['message']="Missing data."; // Displayable message
+			}
+		} else {
+			$res['status']="402"; // Status code
+			$res['message']="Missing file parameter."; // Displayable message
+		}
 	} else {
 		$res['status']="401"; // Status code
 		$res['message']="Unknown operation."; // Displayable message

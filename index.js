@@ -67,7 +67,7 @@ function initTree() {
     		"animation" : 0,
     		"check_callback" : true,
     		"themes" : { "stripes" : true },
-            'data' : {"cache":false,"url" : "backend.php?op=files", "dataType" : "json" }// needed only if you do not supply JSON headers
+            'data' : {"cache":false,"url" : "backend.php?op=list", "dataType" : "json" }// needed only if you do not supply JSON headers
               },
     "types" : {
     			"#" : { "max_children" : 1, "max_depth" : 4, "valid_children" : ["root"] },
@@ -128,15 +128,36 @@ function addTab(tab) {
 	var num_tab = $("#tabs>ul>li").size();
 	$("#tabs>ul").append($("<li data-tab-id='"+num_tab+"'><a class='name' href='#tab"+num_tab+"'><i class='fa fa-inline fa-spin fa-circle-o-notch'/>"+tab.name+"</a><span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>"));
 	$("#tabs").append($("<div class='tab' data-file-id='"+tab.id+"' data-path='"+tab.path+"' data-name='"+tab.name+"' data-tab-id='"+num_tab+"' id='tab"+num_tab+"'/>").append($("#"+tab.type+"Model").clone().attr('id','')));
+	$("#tab"+num_tab+" .tab-saveFile").click(saveFileTab);
 	$("#tabs").tabs("refresh");
 	loadTabContent(num_tab);
 }
 
+function saveFileTab() {
+	var tab = $(this).parents(".tab");
+	var idTab = tab.data('tab-id');
+	var file = tab.data('path') + '/' + tab.data('name')
+	console.log("Saving file \""+file+"\"...");
+	$("#tabs>ul>li[data-tab-id="+idTab+"]").addClass("tab-loading");
+	var content = "data="+tab.find('.textBox').html();
+	$.ajax({
+		method: 'POST',
+		url: 'backend.php?op=save&file='+file,
+		data: content,
+		success: function(res){
+			$("#tabs>ul>li[data-tab-id="+idTab+"]").removeClass("tab-loading");
+			if (res.status==200) {
+				tab.find('.tab-saveFile').hide();
+			} else {
+				console.log("Error "+res.operation+", "+res.status+": "+res.message,res);
+			}
+		}
+	});
+}
+
 function loadTabContent(idTab) {
 	var tab = $("#tabs>div.tab[data-tab-id="+idTab+"]");
-	var path = tab.data('path');
-	var name = tab.data('name');
-	var file = path+'/'+name;
+	var file = tab.data('path') +'/'+ tab.data('name');
 	console.log("Loading file \""+file+"\"...");
 	$("#tabs>ul>li[data-tab-id="+idTab+"]").addClass("tab-loading");
 	$.ajax({
