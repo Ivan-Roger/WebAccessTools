@@ -12,7 +12,7 @@ if (isset($_GET['op'])) {
 		$res['operation']=$_GET['op']; // Action performed
 		if (isset($_GET['file']) && $_GET['file']!="") {
 			if (is_file("files".$_GET['file'])) {
-				sleep(2);
+				//sleep(2);
 				$res['data'] = file_get_contents(str_replace("..","","files".$_GET['file']));
 				$res['status']="200"; // Status code
 				$res['message']="Success !"; // Displayable message
@@ -30,7 +30,7 @@ if (isset($_GET['op'])) {
 		$res['operation']=$_GET['op']; // Action performed
 		if (isset($_GET['file']) && $_GET['file']!="") {
 			if (isset($_POST['data'])) {
-				sleep(2);
+				//sleep(2);
 				file_put_contents(str_replace("..","","files".$_GET['file']),$_POST['data']);
 				$res['status']="200"; // Status code
 				$res['message']="Success !"; // Displayable message

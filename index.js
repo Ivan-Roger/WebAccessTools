@@ -205,7 +205,6 @@ function loadTabContent(idTab) {
 	});
 }
 
-
 function initCalculatrice(){
-	$("#calc").calculatricePlugIn();
+	$("#calc").calc();
 }

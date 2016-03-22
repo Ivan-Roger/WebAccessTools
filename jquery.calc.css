@@ -1,0 +1,59 @@
+	.calc.calc-container {
+		width:353px;
+		background-color:#eeeeee;
+		border:2px solid #CCCCCC;
+		margin:auto; /*centre la calculatrice dans la page */
+		padding:15px;
+	}
+
+	.calc .calc-display-container {
+		margin-top:10px;
+	}
+
+	.calc .calc-display	{
+		font-size:20px;
+		text-align:right;
+		width:340px;
+	}
+
+	.calc .calc-btn-line
+	{
+		margin-top:5px;
+		margin-bottom:5px;
+	}
+
+	.calc .calc-btn-lines-container .calc-btn-line input.calc-btn /* pour mettre les boutons cote a cote*/
+	{
+		display:inline-block;
+	}
+
+	.calc .calc-btn-lines-container .calc-btn-line .calc-btn-classic /* boutons non editable */
+	{
+		width:45px;
+		font-size:18px;
+		margin:2px;
+	}
+
+	.calc .calc-btn-lines-container .calc-btn-line .calc-btn-free /* boutons editables */
+	{
+		width:130px;
+		font-size:20px;
+		margin:auto;
+	}
+
+	.calc .calc-list .calc-drag {
+		display: inline-block;
+		border: 1px solid #BBBBBB;
+		background-color: #DDDDDD;
+		padding: 2px;
+		margin-bottom: 3px;
+		border-radius: 5px;
+	}
+
+	.calc .calc-list .calc-drag[draggable=true] {
+		cursor: pointer;
+	}
+
+	.calc .calc-btn-lines-container .calc-btn-line .calc-btn.calc-edit-mode.active {
+		color: red;
+	}
