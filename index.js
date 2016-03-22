@@ -19,6 +19,13 @@ function init() {
 		heightStyle: "fill"
 	});
 	initTree();
+	initCalendar();
+}
+
+function initCalendar() {
+	$('#calendar').fullCalendar({
+        // put your options and callbacks here
+    });
 }
 
 function createmenu(node) {
@@ -57,6 +64,8 @@ function createmenu(node) {
 		delete menu.item2;
 	} else if (type=='root') {
 		delete menu.item2;
+		delete menu.item3;
+		delete menu.item4;
 	}
 	return menu;
 }
@@ -83,15 +92,32 @@ function initTree() {
 		if (data.node.type=='file') {
 			var path = createPath(data.node.parents);
 			var tab = {name: data.node.text, type:data.node.data.type, path: path, id: data.node.id};
-			if (tabExists(tab))
+			if (tabExists(tab)) {
 				focusTab(tab)
-			else
+			} else {
 				if ($("#tabs>ul>li").size()==0)
 					$('#tabs>ul>i').remove();
 				addTab(tab);
 				focusTab(tab);
+			}
 		}
 	});
+	$('#tree').on("rename_node.jstree",function(e,data)	{
+		var regex = /^[\w_]+\.[a-zA-Z]{1,5}$/g;
+		if (!regex.test(data.text)) {
+			console.log('Mauvais nom:',data.text,' ancien nom:',data.old);
+			$('#tree').jstree(true).rename_node(data.node,data.old)
+		} else {
+			var path = createPath(data.node.parents);
+			var oldTab = {name: data.old, type:data.node.data.type, path: path, id: data.node.id};
+			renameTab(oldTab,data.text);
+		}
+	});
+}
+
+function renameTab(tab,name) {
+	var id = $('#tabs>div.tab[data-file-id="'+tab.id+'"]').data('name',name).data('tab-id');
+	$('#tabs>ul>li[data-tab-id="'+id+'"]>a').text(name);
 }
 
 function createPath(par) {
@@ -134,20 +160,24 @@ function addTab(tab) {
 }
 
 function saveFileTab() {
+	if (!$(this).hasClass('fa-save')) return;
+	$(this).removeClass('fa-save').addClass('fa-spinner').addClass('fa-spin').removeClass('intLink');
 	var tab = $(this).parents(".tab");
 	var idTab = tab.data('tab-id');
 	var file = tab.data('path') + '/' + tab.data('name')
 	console.log("Saving file \""+file+"\"...");
-	$("#tabs>ul>li[data-tab-id="+idTab+"]").addClass("tab-loading");
 	var content = "data="+tab.find('.textBox').html();
 	$.ajax({
 		method: 'POST',
 		url: 'backend.php?op=save&file='+file,
 		data: content,
 		success: function(res){
-			$("#tabs>ul>li[data-tab-id="+idTab+"]").removeClass("tab-loading");
+			tab.find('.tab-saveFile').removeClass('fa-spinner').removeClass('fa-spin');
 			if (res.status==200) {
-				tab.find('.tab-saveFile').hide();
+				console.log('done');
+				tab.find('.tab-saveFile').addClass('fa-check');
+				setTimeout(function(){tab.find('.tab-saveFile').removeClass('fa-check').addClass('fa-save').addClass('intLink');},2000)
+				//tab.find('.tab-saveFile').hide();
 			} else {
 				console.log("Error "+res.operation+", "+res.status+": "+res.message,res);
 			}
