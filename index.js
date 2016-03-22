@@ -20,6 +20,7 @@ function init() {
 	});
 	initTree();
 	initCalendar();
+	initCalculatrice();
 }
 
 function initCalendar() {
@@ -204,6 +205,7 @@ function loadTabContent(idTab) {
 	});
 }
 
+
 function initCalculatrice(){
-	
+	$("#calc").calculatricePlugIn();
 }
