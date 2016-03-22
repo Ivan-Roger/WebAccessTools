@@ -173,3 +173,7 @@ function loadTabContent(idTab) {
 		}
 	});
 }
+
+function initCalculatrice(){
+	
+}
