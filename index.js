@@ -230,5 +230,5 @@ function loadTabContent(idTab) {
 }
 
 function initCalculatrice(){
-	$("#calc").calc();
+	$('#calc').calc();
 }
