@@ -43,7 +43,18 @@ function createmenu(node) {
 			"label": "Create File",
 			"action": function () {
 				node = tree.create_node(node,{"type":"file", data: {type: 'editor'}});
-				tree.edit(node);
+				tree.edit(node,'file.txt',function(node,success,cancel) {
+					console.log('New file',node,success,cancel);
+					if (cancel) return;
+					if (!success)
+						tree.delete_node(node);
+					else {
+						var path = createPath(node.parents);
+						var tab = {name: node.text, type:node.data.type, path: path, id: node.id};
+						focusTab(tab);
+						addTab(tab);
+					}
+				});
 			}
 		},
 		"item3": {
@@ -85,7 +96,7 @@ function initTree() {
     			"default" : { 'icon':"fa fa-folder-o","valid_children" : ["default","file"] },
     			"file" : { 'icon' :"fa fa-file-o", "valid_children" : [] }
     			},
-    "plugins" : [ "contextmenu", "dnd", "state", "types", "wholerow"],
+    "plugins" : [ "contextmenu", "dnd", "state", "types", "wholerow", "unique"],
     "contextmenu": {"items": createmenu, "select_node": false}
   });
 	$('#tree').on("activate_node.jstree",function(e,data)	{
