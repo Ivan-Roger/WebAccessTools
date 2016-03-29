@@ -79,6 +79,8 @@
 			}
 			$(this).append(list);
 
+
+
 			// Initialization done
 	    console.log("CALC LOADED");
 			$.calc.init();
@@ -87,6 +89,85 @@
 
 	$.calc = {
 		version: "v0.1.0"
+	}
+
+	$.calc.init = function(){
+
+		$(".calc-btn.calc-value").click(function(){$.calc.affiche($(this).parents(".calc"),$(this).val())})
+		$(".calc-btn.calc-function").click(function(){$.calc.affiche($(this).parents(".calc"),$(this).val())})
+		$(".calc-btn.calc-action").click(function(){$.calc.action($(this).parents(".calc"),$(this).val())})
+
+	}
+	var memory = undefined;
+
+	$.calc.affiche = function(e,val){
+		var aff = e.find(".calc-display");
+  	var calc = aff.val();
+  	var res = calc.concat(val);
+  	aff.val(res);
+	}
+
+	$.calc.action = function(e,val){
+		if(val=="MS"){
+			$.calc.save_memory(e);
+		}else if(val=="MC"){
+			$.calc.raz_memory();
+		}else if(val=="MR"){
+			$.calc.affiche_memory(e);
+		}else if(val=="MD"){
+
+		}else if(val=="+-"){
+			$.calc.plusmoins(e);
+		}else if(val=="CE"){
+			$.calc.rab(e);
+		}else if(val=="E"){
+
+		}else if(val=="="){
+			$.calc.calcul(e);
+		}else {
+			console.log("erreur");
+		}
+	}
+
+	$.calc.calcul = function(){
+
+	}
+
+	$.calc.rab = function(e){
+		e.find(".calc-display").val("");
+	}
+
+	$.calc.plusmoins = function(e){
+		var calc= e.find(".calc-display").val();
+		if(calc.charAt(0)=='-'){
+			e.find(".calc-display").val(calc.substr(1));
+		}else{
+		var	final = ('-').concat(calc);
+			e.find(".calc-display").val(final);
+		}
+	}
+
+	$.calc.save_memory = function(e){
+		var regex = /^-?\d+\.?\d*$/;
+		if(regex.test(e.find(".calc-display").val())){
+			memory=e.find(".calc-display").val();
+		}else{
+			alert("La chaine doit contenir uniquement des chiffres, le caractère '-' au début, et un seul caractère '.'");
+		}
+	}
+
+	$.calc.raz_memory = function(){
+		memory = undefined;
+	}
+
+	$.calc.affiche_memory = function(e){
+		if(memory != undefined){
+			var aff = e.find(".calc-display").val();
+			var add = aff.concat(memory);
+			e.find(".calc-display").val(add);
+		}else{
+			alert("Acune valeur stocké");
+		}
 	}
 
 	$.calc.editMode = function(e) {

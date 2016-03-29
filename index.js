@@ -139,6 +139,7 @@ function initTree() {
 		}
 	});
 	$('#tree').on("rename_node.jstree",function(e,data)	{
+<<<<<<< HEAD
 		console.log('RENAME',e,data);
 		if (data.node.type=='file'){
 			var regex = /^[\w_]+\.[a-zA-Z]{1,5}$/g;
@@ -162,6 +163,29 @@ function initTree() {
 			}
 		} else if (data.type=='folder') {
 
+/*
+		var regex = /^[\w_]+\.[a-zA-Z]{1,5}$/g;
+		if (!regex.test(data.text)) {
+		//	console.log('Mauvais nom:',data.text,' ancien nom:',data.old);
+
+
+				$('#dialog').text("Le nom "+data.text +" n'est pas valide. L'élément sera nommé : "+data.old);
+				$( "#dialog" ).dialog({
+					modal:true,
+					buttons:{
+						"Ok":function(){
+							$(this).dialog("close");
+						}
+					}
+				});
+
+
+			$('#tree').jstree(true).rename_node(data.node,data.old)
+		} else {
+			var path = createPath(data.node.parents);
+			var oldTab = {name: data.old, type:data.node.data.type, path: path, id: data.node.id};
+			renameTab(oldTab,data.text);
+			*/
 		}
 	});
 }
@@ -271,5 +295,5 @@ function loadTabContent(idTab) {
 }
 
 function initCalculatrice(){
-	$("#calc").calc();
+	$('#calc').calc();
 }
