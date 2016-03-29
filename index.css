@@ -69,3 +69,7 @@ body, #content {
 section.hide {
 	display: none;
 }
+
+#dialog{
+	display:none;
+}

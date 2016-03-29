@@ -106,7 +106,20 @@ function initTree() {
 	$('#tree').on("rename_node.jstree",function(e,data)	{
 		var regex = /^[\w_]+\.[a-zA-Z]{1,5}$/g;
 		if (!regex.test(data.text)) {
-			console.log('Mauvais nom:',data.text,' ancien nom:',data.old);
+		//	console.log('Mauvais nom:',data.text,' ancien nom:',data.old);
+
+
+				$('#dialog').text("Le nom "+data.text +" n'est pas valide. L'élément sera nommé : "+data.old);
+				$( "#dialog" ).dialog({
+					modal:true,
+					buttons:{
+						"Ok":function(){
+							$(this).dialog("close");
+						}
+					}
+				});
+
+
 			$('#tree').jstree(true).rename_node(data.node,data.old)
 		} else {
 			var path = createPath(data.node.parents);

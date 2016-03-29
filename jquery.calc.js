@@ -69,8 +69,26 @@
 		}
 		$(this).append(list);
 
+
+		init();
+
 		// Initialization done
     console.log("CALC LOADED");
   };
+
+	function affiche(id){
+	var op = id.getAttribute("value");
+	console.log(op);
+	var calc = $("calc-display").val();
+	res = calc.concat(op);
+	$("calc-display").val(res);
+	}
+
+	function init(){
+		 var boutons = document.getElementsByClassName("calc-btn");
+		 for(i = 0; i < boutons.length ; i++ ){
+			 boutons[i].setAttribute("onClick","affiche(this)");
+		 }
+	 }
 
 }));
