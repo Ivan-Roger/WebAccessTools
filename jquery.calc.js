@@ -75,7 +75,7 @@
 				if (i!=funcs.length-1)
 					list.append(", ");
 				else
-					list.append('.')
+					list.append('.');
 			}
 			$(this).append(list);
 
@@ -91,6 +91,10 @@
 
 	$.calc.editMode = function(e) {
 		return e.find('calc-btn calc-edit-mode').hasClass('active');
+	}
+
+	$.calc.init = function(e) {
+		return true;
 	}
 
 }));
