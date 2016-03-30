@@ -59,6 +59,25 @@ if (isset($_GET['op'])) {
 			$res['status']="402"; // Status code
 			$res['message']="Missing path."; // Displayable message
 		}
+	} elseif ($_GET['op']=="rmfile") {
+		$res['operation']=$_GET['op']; // Action performed
+		if (isset($_GET['path']) && $_GET['path']!="") {
+			if (isset($_GET['dir']) && $_GET['dir']!="") {
+				if (mkdir($_GET['path'].'/'.$_GET['dir'])) {
+					$res['status']="200"; // Status code
+					$res['message']="Success !"; // Displayable message
+				} else {
+					$res['status']="404"; // Status code
+					$res['message']="Unable to create directory."; // Displayable message
+				}
+			} else {
+				$res['status']="403"; // Status code
+				$res['message']="Missing directory name."; // Displayable message
+			}
+		} else {
+			$res['status']="402"; // Status code
+			$res['message']="Missing path."; // Displayable message
+		}
 	} elseif ($_GET['op']=="rename") {
 		$res['operation']=$_GET['op']; // Action performed
 		if (isset($_GET['path']) && $_GET['path']!="") {

@@ -121,13 +121,14 @@
 		}else if(val=="CE"){
 			$.calc.rab(e);
 		}else if(val=="E"){
-
+			$.calc.swicthEdit(e);
 		}else if(val=="="){
 			$.calc.calcul(e);
 		}else {
 			console.log("erreur");
 		}
 	}
+
 
 	$.calc.calcul = function(e){
 var calc = e.find(".calc-display").val();
@@ -137,7 +138,17 @@ try{
 }catch(err){
 	alert("Saisie incorrecte !")
 }
+}
+
+	$.calc.switchEdit = function(e) {
+		e.classList.toggle('active');
+		$(e).parents('.calc').find('.calc-list .calc-drag').attr('draggable',$.calc.isEditMode($(e).parents('.calc')));
 	}
+
+	$.calc.fixCustoms= function(e) {
+		$(e).parents('.calc').find(".calc-btn.calc-btn-free").attr('type','button');
+	}
+
 
 	$.calc.rab = function(e){
 		e.find(".calc-display").val("");

@@ -36,7 +36,7 @@ function createmenu(node) {
 			"label": "Create Directory",
 			"action":function () {
 				console.log('Create dir node');
-				node = tree.create_node(node);
+				node = tree.create_node(node, {type: 'folder', data: {new: true}});
 				tree.edit(node,'',function(node,success,cancel){
 					console.log('New dir',node,success,cancel);
 					if (cancel) return;
@@ -72,7 +72,8 @@ function createmenu(node) {
 		"item3": {
 			"label": "Rename",
 			"action": function (obj) {
-				tree.edit(node,'',function(node,success,cancel) {
+				console.log('r',obj,node);
+				tree.edit(node,node.original.text,function(node,success,cancel) {
 					console.log('Rename file',node,success,cancel);
 					if (cancel) return;
 					if (!success)
@@ -131,28 +132,35 @@ function initTree() {
 			if (tabExists(tab)) {
 				focusTab(tab)
 			} else {
-				if ($("#tabs>ul>li").size()==0)
-					$('#tabs>ul>i').remove();
 				addTab(tab);
 				focusTab(tab);
 			}
 		}
 	});
 	$('#tree').on("rename_node.jstree",function(e,data)	{
-<<<<<<< HEAD
-		console.log('RENAME',e,data);
+		console.log('RENAME',data);
 		if (data.node.type=='file'){
 			var regex = /^[\w_]+\.[a-zA-Z]{1,5}$/g;
 			if (!regex.test(data.text)) {
 				console.log('Mauvais nom:',data.text,' ancien nom:',data.old);
-				alert('Nom invalide\nVotre nom dois ne dois pas contenir d\'espace ni de caractère special et dois avoir une extension.');
-				$('#tree').jstree(true).edit(data.node);
+				$('#dialog').text("Le nom "+data.text +" n'est pas valide. Votre nom dois ne dois pas contenir d'espace ni de caractère special et dois avoir une extension.");
+				$( "#dialog" ).dialog({
+					modal:true,
+					buttons:{
+						"Ok":function(){
+							$(this).dialog("close");
+							$('#tree').jstree(true).edit(data.node,data.old);
+						}
+					}
+				});
 			} else {
-				if (data.node.new) {
-					console.log('RENAME -> Fichier -> Nom OK -> Nouveau fichier');
-					data.node.new=false; // Local uniquement, a fixer!
-					var path = createPath(node.parents);
-					var tab = {name: node.text, type:node.data.type, path: path, id: node.id};
+				if (data.node.data.new) {
+					console.log('RENAME -> Fichier -> Nom OK -> Nouveau');
+					data.node.data.new=false;
+					var path = createPath(data.node.parents);
+					var tab = {name: data.node.text, type: data.node.data.type, path: path, id: data.node.id};
+					$('#tree').jstree(true).deselect_all();
+					$('#tree').jstree(true).select_node(data.node);
 					addTab(tab);
 					focusTab(tab);
 				} else {
@@ -162,30 +170,13 @@ function initTree() {
 				}
 			}
 		} else if (data.type=='folder') {
-
-/*
-		var regex = /^[\w_]+\.[a-zA-Z]{1,5}$/g;
-		if (!regex.test(data.text)) {
-		//	console.log('Mauvais nom:',data.text,' ancien nom:',data.old);
-
-
-				$('#dialog').text("Le nom "+data.text +" n'est pas valide. L'élément sera nommé : "+data.old);
-				$( "#dialog" ).dialog({
-					modal:true,
-					buttons:{
-						"Ok":function(){
-							$(this).dialog("close");
-						}
-					}
-				});
-
-
-			$('#tree').jstree(true).rename_node(data.node,data.old)
-		} else {
-			var path = createPath(data.node.parents);
-			var oldTab = {name: data.old, type:data.node.data.type, path: path, id: data.node.id};
-			renameTab(oldTab,data.text);
-			*/
+			if (data.node.data.new) {
+				console.log('RENAME -> Dossier -> Nouveau');
+			} else {
+				var path = createPath(data.node.parents);
+				var oldTab = {name: data.old, type:data.node.data.type, path: path, id: data.node.id};
+				renameTab(oldTab,data.text);
+			}
 		}
 	});
 }
@@ -246,6 +237,8 @@ function addTab(tab) {
 	$("#tabs").append($("<div class='tab' data-file-id='"+tab.id+"' data-path='"+tab.path+"' data-name='"+tab.name+"' data-tab-id='"+num_tab+"' id='tab"+num_tab+"'/>").append($("#"+tab.type+"Model").clone().attr('id','')));
 	$("#tab"+num_tab+" .tab-saveFile").click(saveFileTab);
 	$("#tabs").tabs("refresh");
+	if ($("#tabs>ul>li").size()>=1)
+		$('#tabs>ul>i').remove();
 	loadTabContent(num_tab);
 }
 
