@@ -129,10 +129,16 @@
 		}
 	}
 
-	$.calc.calcul = function(){
-
+	$.calc.calcul = function(e){
+var calc = e.find(".calc-display").val();
+try{
+	var res = eval(calc);
+	e.find(".calc-display").val(res);
+}catch(err){
+	alert("Saisie incorrecte !")
+}
 	}
-	
+
 	$.calc.rab = function(e){
 		e.find(".calc-display").val("");
 	}
@@ -171,8 +177,11 @@
 	}
 
 	$.calc.editMode = function(e) {
-		return e.find('calc-btn calc-edit-mode').hasClass('active');
+	e.find('calc-btn calc-edit-mode').hasClass('active');
 	}
+
+
+
 
 
 
