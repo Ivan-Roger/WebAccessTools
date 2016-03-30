@@ -35,19 +35,49 @@ function createmenu(node) {
 		"item1": {
 			"label": "Create Directory",
 			"action":function () {
+				console.log('Create dir node');
 				node = tree.create_node(node);
-				tree.edit(node);
+				tree.edit(node,'',function(node,success,cancel){
+					console.log('New dir',node,success,cancel);
+					if (cancel) return;
+					if (!success)
+						tree.delete_node(node);
+					else {
+						var path = createPath(node.parents);
+						createDir({path: path, name: node.text});
+					}
+				});
 			}
 		},
 		"item2": {
 			"label": "Create File",
 			"action": function () {
-				node = tree.create_node(node,{"type":"file", data: {type: 'editor'}});
-				tree.edit(node,'file.txt',function(node,success,cancel) {
+				node = tree.create_node(node,{type:'file', data: {type: 'editor', new: true}});
+				tree.edit(node,'',function(node,success,cancel) {
 					console.log('New file',node,success,cancel);
+					/*
 					if (cancel) return;
 					if (!success)
 						tree.delete_node(node);
+					else {
+						var path = createPath(node.parents);
+						var tab = {name: node.text, type:node.data.type, path: path, id: node.id};
+						addTab(tab);
+						focusTab(tab);
+					}
+					*/
+				});
+			}
+		},
+		"item3": {
+			"label": "Rename",
+			"action": function (obj) {
+				tree.edit(node,'',function(node,success,cancel) {
+					console.log('Rename file',node,success,cancel);
+					if (cancel) return;
+					if (!success)
+						//tree.delete_node(node);
+						return;
 					else {
 						var path = createPath(node.parents);
 						var tab = {name: node.text, type:node.data.type, path: path, id: node.id};
@@ -55,12 +85,6 @@ function createmenu(node) {
 						addTab(tab);
 					}
 				});
-			}
-		},
-		"item3": {
-			"label": "Rename",
-			"action": function (obj) {
-				tree.edit(node);
 			}
 		},
 		"item4": {
@@ -85,18 +109,18 @@ function createmenu(node) {
 function initTree() {
 	$('#tree').jstree({
     'core' : {
-    		"animation" : 0,
-    		"check_callback" : true,
-    		"themes" : { "stripes" : true },
-            'data' : {"cache":false,"url" : "backend.php?op=list", "dataType" : "json" }// needed only if you do not supply JSON headers
-              },
+  		"animation" : 0,
+  		"check_callback" : true,
+  		"themes" : { "stripes" : true },
+      "data" : {"cache":false,"url" : "backend.php?op=list", "dataType" : "json" }// needed only if you do not supply JSON headers
+    },
     "types" : {
-    			"#" : { "max_children" : 1, "max_depth" : 4, "valid_children" : ["root"] },
-   				"root" : { 'icon':"fa fa-folder", "valid_children" : ["default"] },
-    			"default" : { 'icon':"fa fa-folder-o","valid_children" : ["default","file"] },
-    			"file" : { 'icon' :"fa fa-file-o", "valid_children" : [] }
-    			},
-    "plugins" : [ "contextmenu", "dnd", "state", "types", "wholerow", "unique"],
+			"#" : { "max_children" : 1, "max_depth" : 4, "valid_children" : ["root"] },
+			"root" : { 'icon':"fa fa-folder", "valid_children" : ["default"] },
+			"default" : { 'icon':"fa fa-folder-o","valid_children" : ["default","file"] },
+			"file" : { 'icon' :"fa fa-file-o", "valid_children" : [] }
+		},
+    "plugins" : ["contextmenu", "dnd", "state", "types", "wholerow", "unique"],
     "contextmenu": {"items": createmenu, "select_node": false}
   });
 	$('#tree').on("activate_node.jstree",function(e,data)	{
@@ -115,6 +139,31 @@ function initTree() {
 		}
 	});
 	$('#tree').on("rename_node.jstree",function(e,data)	{
+<<<<<<< HEAD
+		console.log('RENAME',e,data);
+		if (data.node.type=='file'){
+			var regex = /^[\w_]+\.[a-zA-Z]{1,5}$/g;
+			if (!regex.test(data.text)) {
+				console.log('Mauvais nom:',data.text,' ancien nom:',data.old);
+				alert('Nom invalide\nVotre nom dois ne dois pas contenir d\'espace ni de caractère special et dois avoir une extension.');
+				$('#tree').jstree(true).edit(data.node);
+			} else {
+				if (data.node.new) {
+					console.log('RENAME -> Fichier -> Nom OK -> Nouveau fichier');
+					data.node.new=false; // Local uniquement, a fixer!
+					var path = createPath(node.parents);
+					var tab = {name: node.text, type:node.data.type, path: path, id: node.id};
+					addTab(tab);
+					focusTab(tab);
+				} else {
+					var path = createPath(data.node.parents);
+					var oldTab = {name: data.old, type:data.node.data.type, path: path, id: data.node.id};
+					renameTab(oldTab,data.text);
+				}
+			}
+		} else if (data.type=='folder') {
+
+/*
 		var regex = /^[\w_]+\.[a-zA-Z]{1,5}$/g;
 		if (!regex.test(data.text)) {
 		//	console.log('Mauvais nom:',data.text,' ancien nom:',data.old);
@@ -136,7 +185,23 @@ function initTree() {
 			var path = createPath(data.node.parents);
 			var oldTab = {name: data.old, type:data.node.data.type, path: path, id: data.node.id};
 			renameTab(oldTab,data.text);
+			*/
 		}
+	});
+}
+
+function createDir(obj) {
+	console.log('Create dir:','Path='+obj.path,'Name='+obj.name);
+	$.ajax({
+		method: 'GET',
+		url: 'backend.php?op=mkdir&path='+obj.path+'&name='+obj.name,
+		success: function (res) {
+			if (res.status==200) {
+				console.log("Success "+res.operation+", "+res.status+": "+res.message,res);
+			} else {
+				console.log("Error "+res.operation+", "+res.status+": "+res.message,res);
+			}
+		},
 	});
 }
 
